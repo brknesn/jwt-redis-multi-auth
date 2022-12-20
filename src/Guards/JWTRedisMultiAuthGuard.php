@@ -27,22 +27,18 @@ class JWTRedisMultiAuthGuard extends JWTGuard
     public function attempt(array $credentials = [], $login = true, $data_factory = null)
     {
         $this->lastAttempted = $this->provider->retrieveByCredentials($credentials);
-
         $this->fireAttemptEvent($credentials);
-
         $result_type = 'SUCCESS';
         $status = false;
         $token = null;
-
         if ($this->lastAttempted) {
             $this->lastAttempted = $this->prepareLastAttempedData($this->lastAttempted, $data_factory);
             $result_type = $this->checkLastAttemptedLoginStatus();
-
             if ($this->hasValidCredentials($this->lastAttempted, $credentials)) {
                 $this->refreshAuthFromRedis($this->lastAttempted);
-
                 if ($login) {
                     $token = $this->login($this->lastAttempted);
+
                     $this->setUser($this->lastAttempted);
                     $this->storeRedis(true);
                 } else {
@@ -61,6 +57,7 @@ class JWTRedisMultiAuthGuard extends JWTGuard
             'status' => $status,
             'type' => $result_type,
             'token' => $token,
+            'authenticable' => $this->lastAttempted
         ];
     }
 
@@ -92,7 +89,6 @@ class JWTRedisMultiAuthGuard extends JWTGuard
                 'user' => $data_factory->data($authenticable)
             ]);
         }
-
         return $authenticable;
     }
 
@@ -148,7 +144,7 @@ class JWTRedisMultiAuthGuard extends JWTGuard
         if ($login) {
             return RedisCache::key($this->lastAttempted->getRedisKey())->data($this->lastAttempted)->cache();
         } else { // Giriş dışında kayıt gerekiyorsa JWT içindeki key değeri alınıyor.
-            return RedisCache::key($this->getRedisKeyFromClaim())->data(JWTAuth::parseToken()->authenticate()->load(config('jwt_redis_multi_auth.cache_relations')))->cache();
+           return RedisCache::key($this->getRedisKeyFromClaim())->data(JWTAuth::parseToken()->authenticate()->load(config('jwt_redis_multi_auth.cache_relations')))->cache();
         }
     }
 
@@ -160,7 +156,6 @@ class JWTRedisMultiAuthGuard extends JWTGuard
     public function attempt_2fa_step_1(array $credentials = [])
     {
         $this->lastAttempted = $this->provider->retrieveByCredentials($credentials);
-
         $this->fireAttemptEvent($credentials);
 
         $result_type = 'FAIL';

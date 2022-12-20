@@ -10,6 +10,7 @@ use SuStartX\JWTRedisMultiAuth\Contracts\RedisCacheContract;
 use SuStartX\JWTRedisMultiAuth\Factories\BaseUserDataFactory;
 use SuStartX\JWTRedisMultiAuth\Guards\JWTRedisMultiAuthGuard;
 use SuStartX\JWTRedisMultiAuth\Hashers\JWTRedisMultiAuthHasher;
+use SuStartX\JWTRedisMultiAuth\Helpers\GuardHelper;
 
 class JWTRedisMultiAuthServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class JWTRedisMultiAuthServiceProvider extends ServiceProvider
         $this->app->bind(RedisCacheContract::class, function ($app) {
             return new RedisCache();
         });
+
     }
 
     public function boot()
@@ -33,9 +35,11 @@ class JWTRedisMultiAuthServiceProvider extends ServiceProvider
         // Provider
         Auth::provider('JWTRedisMultiAuthProvider', function ($app, array $config) {
             // TODO : Otomatik tespit etme tamamlanabilir..
-            // $guard_name = GuardHelper::autoDetectGuard();
-            $guard_name = config('auth.defaults.guard');
+            $cng = $config;
+            $guard_name = GuardHelper::autoDetectGuard();
+           // $guard_name = config('auth.defaults.guard');
             $guard = config('auth.guards.' . $guard_name);
+
             $config = config('auth.providers.' . $guard['provider']);
 
             $module_config = config('jwt_redis_multi_auth');
@@ -78,12 +82,14 @@ class JWTRedisMultiAuthServiceProvider extends ServiceProvider
         // Guard
         Auth::extend('JWTRedisMultiAuthGuard', function ($app, $name, array $config) {
             // TODO : Otomatik tespit etme tamamlanabilir..
-            // $guard_name = GuardHelper::autoDetectGuard();
-            $guard_name = config('auth.defaults.guard');
+            $guard_name = GuardHelper::autoDetectGuard();
+            //$guard_name = config('auth.defaults.guard');
             $config = config('auth.guards.' . $guard_name);
 
             $jwt = $app['tymon.jwt'];
-            $provider = Auth::createUserProvider($config['provider']);
+
+            $provider = Auth::createUserProvider('jwt_staff');
+
             $request = $app['request'];
             $event_dispatcher = $app['events'];
 

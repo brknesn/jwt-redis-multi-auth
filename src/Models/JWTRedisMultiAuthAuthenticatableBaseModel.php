@@ -8,7 +8,9 @@ class JWTRedisMultiAuthAuthenticatableBaseModel extends BaseModel
 {
     use JWTRedisHasRoles;
 
-    public $customClaims = [];
+    public $customClaims = [
+        'stripe_id' => 'string',
+    ];
 
     public function addCustomClaims(array $claims){
         $this->customClaims = array_merge($this->customClaims, $claims);

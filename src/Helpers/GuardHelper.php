@@ -11,7 +11,6 @@ class GuardHelper
     public static function autoDetectGuard()
     {
         $request = request();
-
         $prefix = config('jwt_redis_multi_auth.guard_prefix');
         $default_guard_name = config('auth.defaults.guard');
 
