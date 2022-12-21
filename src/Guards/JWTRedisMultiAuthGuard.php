@@ -85,9 +85,7 @@ class JWTRedisMultiAuthGuard extends JWTGuard
         }
 
         if ($data_factory) {
-            $authenticable->addCustomClaims([
-                'user' => $data_factory->data($authenticable)
-            ]);
+            $authenticable->addCustomClaims($data_factory->data($authenticable));
         }
         return $authenticable;
     }
@@ -119,11 +117,11 @@ class JWTRedisMultiAuthGuard extends JWTGuard
             $result_type = 'BANNED';
         }
 
-//        if (config('jwt_redis_multi_auth.check_banned_user')) {
-//            if (!$user->checkUserStatus()) {
-//                throw new AuthorizationException('Your account has been blocked by the administrator.');
-//            }
-//        }
+        //        if (config('jwt_redis_multi_auth.check_banned_user')) {
+        //            if (!$user->checkUserStatus()) {
+        //                throw new AuthorizationException('Your account has been blocked by the administrator.');
+        //            }
+        //        }
 
         return $result_type;
     }
@@ -144,7 +142,7 @@ class JWTRedisMultiAuthGuard extends JWTGuard
         if ($login) {
             return RedisCache::key($this->lastAttempted->getRedisKey())->data($this->lastAttempted)->cache();
         } else { // Giriş dışında kayıt gerekiyorsa JWT içindeki key değeri alınıyor.
-           return RedisCache::key($this->getRedisKeyFromClaim())->data(JWTAuth::parseToken()->authenticate()->load(config('jwt_redis_multi_auth.cache_relations')))->cache();
+            return RedisCache::key($this->getRedisKeyFromClaim())->data(JWTAuth::parseToken()->authenticate()->load(config('jwt_redis_multi_auth.cache_relations')))->cache();
         }
     }
 

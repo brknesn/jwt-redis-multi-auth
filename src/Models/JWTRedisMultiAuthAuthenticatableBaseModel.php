@@ -8,20 +8,21 @@ class JWTRedisMultiAuthAuthenticatableBaseModel extends BaseModel
 {
     use JWTRedisHasRoles;
 
-    public $customClaims = [
-        'stripe_id' => 'string',
-    ];
+    public $customClaims = [];
 
-    public function addCustomClaims(array $claims){
+    public function addCustomClaims(array $claims)
+    {
         $this->customClaims = array_merge($this->customClaims, $claims);
     }
-    public function deleteCustomClaims(array $claims){
+    public function deleteCustomClaims(array $claims)
+    {
         foreach ($claims as $claim) {
             unset($this->customClaims[$claim]);
         }
     }
 
-    public function getModelClassName(){
+    public function getModelClassName()
+    {
         return (new \ReflectionClass($this))->getShortName();
     }
 
