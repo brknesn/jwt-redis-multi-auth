@@ -88,7 +88,7 @@ class JWTRedisMultiAuthServiceProvider extends ServiceProvider
 
             $jwt = $app['tymon.jwt'];
 
-            $provider = Auth::createUserProvider('jwt_staff');
+            $provider = Auth::createUserProvider($guard_name);
 
             $request = $app['request'];
             $event_dispatcher = $app['events'];
