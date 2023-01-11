@@ -42,7 +42,7 @@ class GuardHelper
                 $guard_name = $default_guard_name;
             }
         } else {
-            $token_cookie = Cookie::get(env('COOKIE_NAME'));
+            $token_cookie = Cookie::get($default_guard_name."_".env('COOKIE_NAME'));
             $token_bearer = request()->bearerToken();
             $token = $token_cookie ?: $token_bearer ?: null;
 

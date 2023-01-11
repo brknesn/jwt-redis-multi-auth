@@ -249,10 +249,9 @@ class JWTRedisMultiAuthGuard extends JWTGuard
         return RedisCache::key($this->getRedisKeyFromClaim())->getCache();
     }
 
-    public function getToken()
+    public function getToken($default_guard)
     {
-        // TODO : Sadece cookie yerine veritabanından da kontrol edilmeli
-        return Cookie::get(env('COOKIE_NAME'));
+        return Cookie::get($default_guard.env('COOKIE_NAME'));
     }
 
     // ----------------------------------------------------------------------------------------------------

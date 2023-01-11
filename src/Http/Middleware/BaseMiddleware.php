@@ -22,7 +22,8 @@ class BaseMiddleware
      */
     public function setIfClaimIsNotExist(Request $request){
         if ($request->claim === null) {
-            $token_cookie = \Cookie::get(env('COOKIE_NAME'));
+            $default_guard_name = config('auth.defaults.guard');
+            $token_cookie = \Cookie::get($default_guard_name.'_'.env('COOKIE_NAME'));
             $token_bearer = request()->bearerToken();
             $token = $token_cookie ?: $token_bearer ?: null;
             $payload = JWTAuth::setToken($token)->getPayload();
