@@ -31,6 +31,7 @@ class JWTRedisMultiAuthGuard extends JWTGuard
         $result_type = 'SUCCESS';
         $status = false;
         $token = null;
+        $this->setTTL(config('jwt_redis_multi_auth.redis_ttl'));
         if ($this->lastAttempted) {
             $this->lastAttempted = $this->prepareLastAttempedData($this->lastAttempted, $data_factory);
             $result_type = $this->checkLastAttemptedLoginStatus();
@@ -194,6 +195,7 @@ class JWTRedisMultiAuthGuard extends JWTGuard
         if ($this->lastAttempted) {
             $this->lastAttempted = $this->prepareLastAttempedData($this->lastAttempted, $data_factory);
             $result_type = $this->checkLastAttemptedLoginStatus();
+            $this->setTTL(config('jwt_redis_multi_auth.redis_ttl'));
             $this->refreshAuthFromRedis($this->lastAttempted);
             $token = $this->login($this->lastAttempted);
             $this->setUser($this->lastAttempted);
