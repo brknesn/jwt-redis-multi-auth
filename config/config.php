@@ -72,6 +72,8 @@ return [
     */
     'redis_ttl' => env('JWT_REDIS_MULTI_AUTH_REDIS_TTL', 60),
 
+
+    'jwt_ttl' => env('JWT_REDIS_MULTI_AUTH_JWT_TTL', 60),
     /*
     |--------------------------------------------------------------------------
     | Igbinary Serialization

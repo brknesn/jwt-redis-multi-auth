@@ -28,7 +28,6 @@ class RedisCache implements RedisCacheContract
     public function getCache()
     {
         $data = Redis::connection('cache')->get($this->key);
-
         if (!is_null($data)) {
             return $this->unserialize($data);
         }
@@ -57,7 +56,6 @@ class RedisCache implements RedisCacheContract
         $this->setTime();
 
         Redis::connection('cache')->setex($this->key, $this->time, $this->serialize($this->data));
-
         return $this->data;
     }
 
